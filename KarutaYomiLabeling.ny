@@ -18,12 +18,13 @@ $copyright (_ "GNU General Public License v3.0 or later")
 $control THRESHOLD (_ "Threshold level (dB)") float "" -34 -100 0
 $control MEASUREMENT (_ "Threshold measurement") choice (("peak" (_ "Peak level"))
                                                          ("avg" (_ "Average level"))
-                                                         ("rms" (_ "RMS level"))) 0
+                                                         ("rms" (_ "RMS level"))) 2
 $control SIL-DUR (_ "Minimum silence duration") time "" 1 0.01 3600
 $control SND-DUR (_ "Minimum label interval") time "" 1 0.01 7200
 $control MIN-SOUND-DUR (_ "Minimum sound duration") time "" 1 0.01 10
 $control TYPE (_ "Label type") choice (("pre ONLY" (_ "preprocess only"))
-                                       ("pre+post" (_ "pre+post process"))) 0
+                                       ("pre+post" (_ "pre+post process"))
+                                       ("entire Yomi" (_ "entire Yomi"))) 0
 $control PRE-OFFSET (_ "Maximum leading silence") time "" 0 0 nil
 $control POST-OFFSET (_ "Maximum trailing silence") time "" 0 0 nil
 
@@ -196,7 +197,7 @@ $control POST-OFFSET (_ "Maximum trailing silence") time "" 0 0 nil
         (prev-text "")
         (labels ())
         (kamishimo ())
-        (final-sound (if (= TYPE 3) 1 1)) ;TYPE 3 = regions  between sounds.
+        (final-sound (if (= TYPE 2) 0 1)) ;
         ;; Assign variables to parsed label text
         (digits (first textstr))
         (num (second textstr))
@@ -222,7 +223,7 @@ $control POST-OFFSET (_ "Maximum trailing silence") time "" 0 0 nil
             ;; Don't overlap following sounds.
             (when (> i 0)
               (setf label-end (min label-end (first (nth (1- i) snd-list))))))
-        (t  ;; labelling sounds
+        (1  ;; labelling sounds
             (setf prev-end-time (second (nth (1+ i) snd-list)))
             (setf start-time (* (round (/ (first (nth i snd-list)) 0.05)) 0.05))
             (setf end-time (* (round (/ (second (nth i snd-list)) 0.05)) 0.05))
@@ -235,6 +236,16 @@ $control POST-OFFSET (_ "Maximum trailing silence") time "" 0 0 nil
             ;don't overlap t0 or previous sound.
             (setf label-start (max t0 label-start (- start-time PRE-OFFSET)))
             (setf label-end (+ start-time POST-OFFSET))
+            ;; Don't overlap following sounds.
+            (when (> i 0)
+              (setf label-end (min label-end (first (nth (1- i) snd-list))))))
+        (2  ;;label silences.
+            (setf start-time (first (nth i snd-list)))
+            (setf end-time (second (nth i snd-list)))
+            (setf pre-txt "yomi")
+            ;don't overlap t0 or previous sound.
+            (setf label-start (max t0 label-start (- start-time PRE-OFFSET)))
+            (setf label-end (+ end-time POST-OFFSET))
             ;; Don't overlap following sounds.
             (when (> i 0)
               (setf label-end (min label-end (first (nth (1- i) snd-list)))))))
@@ -253,6 +264,21 @@ $control POST-OFFSET (_ "Maximum trailing silence") time "" 0 0 nil
       ;num is either an int or nil
       (when num (incf num)))))
 
+(defun merge-sounds (snd-list)
+  (let ((starts '())
+        (ends '())
+        (merged '()))
+    (push 0 starts)
+    (push -1 ends)
+    (setf snd-list (reverse snd-list))
+    (push  (first (first snd-list)) starts)
+    (do ((i 1 (1+ i))) ((> i (1- (length snd-list))))
+      (if (> (- (first (nth i snd-list)) (second (nth (1- i) snd-list))) 3.5 ) ;; Merge if it's N seconds or longer.
+        (progn (push  (first (nth i snd-list)) starts)(push (second (nth (1- i) snd-list)) ends)) nil))
+    (push (second (nth (1- (length snd-list)) snd-list)) ends)
+    (setf merged (mapcar 'list starts ends))))
+
+
 (defun filter-short-sounds (snd-list min-dur)
   (let ((filtered ()))
     (dolist (snd snd-list)
@@ -266,6 +292,7 @@ $control POST-OFFSET (_ "Maximum trailing silence") time "" 0 0 nil
   (setf *track* nil)
   (setf snd-list (find-sounds sig (snd-srate sig)))
   (setf snd-list (filter-short-sounds snd-list MIN-SOUND-DUR))
+  (if (= TYPE 2) (setf snd-list (merge-sounds snd-list)) nil)
   (cond
     ((= (length snd-list) 0)
       (format nil
