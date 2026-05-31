@@ -27,7 +27,9 @@ $control TYPE (_ "Label type") choice (("pre ONLY" (_ "preprocess only"))
                                        ("entire Yomi" (_ "entire Yomi"))) 0
 $control PRE-OFFSET (_ "Maximum leading silence") time "" 0 0 nil
 $control POST-OFFSET (_ "Maximum trailing silence") time "" 0 0 nil
-
+$control TYPE2 (_ "Yomi type") choice (("Keep it all" (_ "Keep it all"))
+                                       ("Kaminoku + Shimonoku" (_ "Kaminoku + Shimonoku"))
+                                       ("Kaminoku only" (_ "Kaminoku only"))) 0
 
 (setf thresh-lin (db-to-linear THRESHOLD))
 (setf max-labels 10000)  ;max number of labels to return
@@ -145,8 +147,7 @@ $control POST-OFFSET (_ "Maximum trailing silence") time "" 0 0 nil
         (snd-start 0)
         (label-count 0)
         (snd-samples (* SND-DUR srate))
-        (sil-samples (* SIL-DUR srate))
-        (min-snd-samples (* MIN-SOUND-DUR srate)))
+        (sil-samples (* SIL-DUR srate)))
     ;;Ignore samples before time = 0
     (when (< sel-start 0)
       (setf sample-count (truncate (* (abs sel-start) srate)))
@@ -196,7 +197,6 @@ $control POST-OFFSET (_ "Maximum trailing silence") time "" 0 0 nil
         (label-text "")
         (prev-text "")
         (labels ())
-        (kamishimo ())
         (final-sound (if (= TYPE 2) 0 1)) ;
         ;; Assign variables to parsed label text
         (digits (first textstr))
@@ -254,11 +254,10 @@ $control POST-OFFSET (_ "Maximum trailing silence") time "" 0 0 nil
                                pre-txt
                                (pad num digits)
                                post-txt))
-      (case TYPE
-        (0 (push (list label-start label-end label-text) labels)) ;point label before sound
-        (1 (push (list label-start label-end label-text) labels))   ;point label after sound
-        (2 (push (list label-start label-end label-text) labels)) ;sound region
-        (t (push (list label-start label-end label-text) labels)));silent region
+      (cond ((string-search "noise" label-text) (if (< TYPE2 1) (push (list label-start label-end label-text) labels) nil))
+            ((string-search "shimo" label-text) (if (< TYPE2 2) (push (list label-start label-end label-text) labels) nil))
+            (T (push (list label-start label-end label-text) labels)))
+      
       ;Earliest allowed start time for next label.
       (setf label-start end-time)
       ;num is either an int or nil
