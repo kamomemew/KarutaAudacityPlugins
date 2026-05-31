@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>CSV → OTIO JSON Converter</title>
+    <meta name="description" content="CSVから動画自動編集用のファイルが作れます。">
+    <meta name="keywords" content="競技かるた, 百人一首, 動画編集">
     <meta property="og:title" content="CSV → OTIO JSON Converter">
     <meta property="og:description" content="CSVから動画自動編集用のファイルが作れます。">
     <meta property="og:url" content="https://kamomemew.github.io/KarutaAudacityPlugins/otio_maker.html">
@@ -18,7 +20,7 @@
 <body class="bg-light">
           <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#"><img class="mx-3" src="./resources/favicon.png" width="46" height="46">競技かるた(百人一首)読み抽出プラグイン</a>
+                <a class="navbar-brand" href="#"><img class="mx-3" src="./resources/favicon.png" width="46" height="46">競技かるた読み抽出プラグイン</a>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item"><a class="nav-link" aria-current="page" href="./index.html">Home</a></li>
@@ -40,7 +42,7 @@
 
         <div class="mb-3">
             <label class="form-label">動画ファイルを選択（OTIO 内で参照されます）</label>
-            <input type="file" id="videoPath" class="form-control" accept=".mov,.mp4">
+            <input type="file" id="videoPath" class="form-control" accept=".mov,.mp4,.ogv,.avi,.wmv,.webm,.mkv">
         </div>
 
         <button class="btn btn-primary" onclick="convert()">変換する</button>
