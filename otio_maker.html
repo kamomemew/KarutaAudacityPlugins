@@ -81,11 +81,9 @@ function parseDelimited(text) {
 
 
 function emitClip(start, end, name, fps, videoPath) {
-    const startVal = start.mul(fps).toString();
-    const durVal = (end.sub(start)).mul(fps).toString();
-
-    return `
-                    {
+    const startVal = start.mul(fps);
+    const durVal = (end.sub(start)).mul(fps);
+    return `                    {
                         "OTIO_SCHEMA": "Clip.2",
                         "name": "${name}",
                         "source_range": {
@@ -171,8 +169,7 @@ ${audioClips}
 function convert() {
     const file = document.getElementById("csvFile").files[0];
     const videoPath = document.getElementById("videoPath").files[0].name;
-    const fps = 60.0;
-
+    const fps = Decimal(60.0);
     if (!file) {
         alert("CSV ファイルを選択してください");
         return;
