@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="かるた用音声抽出プラグインを作りました！動画編集などのお供にどうぞ。">
+    
+    <meta property="og:title" content="かるた用音声抽出プラグインを作った">
+    <meta property="og:description" content="かるた用音声抽出プラグインを作りました！動画編集などのお供にどうぞ。">
+    <meta property="og:url" content="https://kamomemew.github.io/KarutaAudacityPlugins/">
+    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://kamomemew.github.io/KarutaAudacityPlugins/resources/favicon.png">
+    
+    <link rel="shortcut icon" href="https://kamomemew.github.io/KarutaAudacityPlugins/resources/favicon.ico" type="image/vnd.microsoft.icon">
+    <link rel="icon" href="https://kamomemew.github.io/KarutaAudacityPlugins/resources/favicon.ico" type="image/vnd.microsoft.icon">
+    <link rel="apple-touch-icon" href="https://kamomemew.github.io/KarutaAudacityPlugins/resources/favicon.png" >
+
+    <title>競技かるた(百人一首)読み抽出プラグイン</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"><img class="mx-3" src="./resources/favicon.png" width="46" height="46">競技かるた(百人一首)読み抽出プラグイン</a>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="./otio_maker.html">動画編集</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+<div class="container py-5 col-lg-7 col-md-9">
+<h1>競技かるた読み抽出プラグイン</h1>
+<h2 class="pt-3">概要</h2>
+<hr>
+<p>このソフトウェアは百人一首(競技かるた)の読み部分を抽出するAudacitynプラグインです。
+読手講習会用の音源作成や、かるた動画の作成に使えます。</p>
+<h2 class="pt-3">使用方法</h2>
+<hr>
+<h3 class="pt-2">インストール</h3>
+<p><a href="https://github.com/kamomemew/KarutaAudacityPlugins/releases/latest" title="https://github.com/kamomemew/KarutaAudacityPlugins/releases/latest">ダウンロードはこちらからできます。</a>
+Audacityへのインストールは<code>ツール &gt; Nyquistプラグインをインストール</code> からインストールしてください。</p>
+<h3 class="pt-2">実行</h3>
+<p>動画や音声を読み込んだ後、下記を設定してから実行します。</p>
+<div class="ps-3">
+<dl>
+  <dt>しきい値のレベル</dt>
+  <dd class="ps-4">この値以下を無音として判定します。波形を見て設定してください。</dd>
+  <dt>しきい値の取得方法</dt>
+  <dd class="ps-4">通常はRMSにしておけばokです。</dd>
+  <dt>無音部の最短継続時間</dt>
+  <dd class="ps-4">無音部の最短継続時間。1秒前後</dd>
+  <dt>最短ラベル間隔</dt>
+  <dd class="ps-4">前回のラベルからどの程度空けるか。</dd>
+  <dt>minimum sound duration</dt>
+  <dd class="ps-4">最短の有音部。これ以下の場合には無視される。</dd>
+  <dt>ラベル配置形式</dt>
+  <dd class="ps-4">動画の場合にはpre+postにする。読みの場合はEntire Yomiを選択。確認はpreprocess onlyとする。</dd>
+  <dt>開始側に確保する最長無音部</dt>
+  <dd class="ps-4">開始側に確保する秒数。動画の場合は余韻を含めるため1秒程度にセット</dd>
+  <dt>終了側に確保する最長無音部</dt>
+  <dd class="ps-4">終了側に確保する秒数。動画の場合には2.3秒程度</dd>
+  <dt>Yomi type</dt>
+  <dd class="ps-4">Keep it all：削除しない。<br>Kaminoku+Shimonoku：上の句と下の句。 <br>Kaminoku only：上の句のみ。動画に</dd>
+</dl>
+</div>
+<div class="alert alert-success" role="alert">
+動画編集の際には、ラベル配置形式: pre+post、開始側に確保する最長無音部: 1秒、終了側に確保する最長無音部: 2.3秒、Yomi type: Kaminoku only
+とすると余韻～上の句読み開始周辺にラベルを配置できます。
+</div>
+<h3 class="pt-2">エクスポート</h3>
+<p>Audacityの<code>ファイル &gt; ほかをエクスポート &gt; ラベルをエクスポート</code> からラベルをエクスポートしてください。</p>
+<h2 class="pt-3">動画のカット編集</h2>
+<hr>
+<p>動画用にフォルダを作り、<strong>動画ファイル</strong>と上でできた<strong>ラベルファイル</strong>を入れてください。</p>
+<p>上でエクスポートしたラベルを使ってこちらのページからOTIOファイルを設定＆ダウンロードできます。
+出来上がった<strong><code>output.otio</code></strong>も同じフォルダに入れます。
+OTIOファイルは対応する動画編集ソフトに読み込ませることで、動画がカットされます。
+<br>(KDEnliveで動作確認しています。)</p>
+</div>
+</body>
+</html>
