@@ -22,7 +22,7 @@
 <body class="bg-light">
           <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#"><img class="mx-3" src="./resources/favicon.png" width="46" height="46">競技かるた読み抽出プラグイン</a>
+                <a class="navbar-brand" href="#"><img class="mx-3" src="./resources/favicon.png" width="46" height="46" style="border: 1px solid rgb(159, 169, 83);">競技かるた読み抽出プラグイン</a>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
@@ -45,7 +45,8 @@
 <hr>
 <h3 class="pt-2">インストール</h3>
 <p><a href="https://github.com/kamomemew/KarutaAudacityPlugins/releases/latest" title="https://github.com/kamomemew/KarutaAudacityPlugins/releases/latest">ダウンロードはこちらからできます。</a>
-Audacityへのインストールは<code>ツール &gt; Nyquistプラグインをインストール</code> からインストールしてください。</p>
+Audacityへのインストールは<code>ツール &gt; Nyquistプラグインをインストール</code> からインストールしてください。 
+うまくインストールできると<code>解析 &gt; Karuta Yomi Labeling (original: Label Sounds)</code>が増えているはずです。</p>
 <h3 class="pt-2">実行</h3>
 <p>動画や音声を読み込んだ後、下記を設定してから実行します。</p>
 <div class="ps-3">
@@ -61,13 +62,13 @@ Audacityへのインストールは<code>ツール &gt; Nyquistプラグイン�
   <dt>minimum sound duration</dt>
   <dd class="ps-4">最短の有音部。これ以下の場合には無視される。</dd>
   <dt>ラベル配置形式</dt>
-  <dd class="ps-4">動画の場合にはpre+postにする。読みの場合はEntire Yomiを選択。確認はpreprocess onlyとする。</dd>
+  <dd class="ps-4">動画の場合にはpre+postにする。(音の終了時間が無視され、開始の前後にマーカーを配置します。)<br>読みの場合はEntire Yomiを選択。確認はpreprocess onlyとする。</dd>
   <dt>開始側に確保する最長無音部</dt>
   <dd class="ps-4">開始側に確保する秒数。動画の場合は余韻を含めるため1秒程度にセット</dd>
   <dt>終了側に確保する最長無音部</dt>
   <dd class="ps-4">終了側に確保する秒数。動画の場合には2.3秒程度</dd>
   <dt>Yomi type</dt>
-  <dd class="ps-4">Keep it all：削除しない。<br>Kaminoku+Shimonoku：上の句と下の句。 <br>Kaminoku only：上の句のみ。動画用を想定した機能</dd>
+  <dd class="ps-4">Keep it all：削除しない。<br>Kaminoku+Shimonoku：上の句と下の句を残し、ノイズを削除。 <br>Kaminoku only：上の句のみ。動画用を想定した機能</dd>
 </dl>
 </div>
 <div class="alert alert-success" role="alert">
