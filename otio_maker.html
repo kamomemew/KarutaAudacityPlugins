@@ -71,10 +71,10 @@ function parseDelimited(text) {
 
         const start_raw = Decimal(parts[0]);
         const end_raw = Decimal(parts[1]);
-        const name = parts[2] ? parts[2].trim() : `${start}_${end}`;
 
         const start = start_raw.div(0.05).ceil().mul(0.05);
         const end   = end_raw.div(0.05).ceil().mul(0.05);
+        const name = parts[2] ? parts[2].trim() : `${start}_${end}`;
 
         ranges.push([start, end, name]);
     }
